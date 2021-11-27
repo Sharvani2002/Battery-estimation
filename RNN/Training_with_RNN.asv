@@ -40,8 +40,8 @@ learning_rate = 0.1;
 parameters_Wax = rand([size(a_prev,1),size(Xtrain, 1)])*0.01;
 parameters_Waa = rand([size(a_prev,1),size(a_prev, 2)])'*0.01;
 parameters_Wya = rand([size(Ytrain,1),size(a_prev, 1)])*0.01;
-parameters_ba = rand([size(b,1),size(a_prev, 2)])*0.01;
-parameters_by = rand([size(b,1),size(Ytrain, 2)])*0.01;
+parameters_ba = rand([size(b,1),size(a_prev, 1)])*0.01;
+parameters_by = rand([size(b,1),size(Ytrain, 1)])*0.01;
 
 
 for j = 1:1:num_iterations
@@ -49,7 +49,7 @@ for j = 1:1:num_iterations
     %curr_loss, gradients, a_prev = optimize(X, Y, a_prev, parameters)
     %parameters_W,parameters_b,v_dW,v_db, s_dW, s_db = update_parameters_with_adam(parameters_W,parameters_b, grads_dW,grads_db, v_dW,v_db, s_dW,s_db, t, learning_rate, beta1, beta2,  epsilon);
     
-    [loss, dx, da0, dWax, dWaa, dba, aa, parameters] = optimize(Xtrain, Ytrain, a_prev, parameters_Wax,parameters_Waa, parameters_Wya, parameters_ba, parameters_by, learning_rate);
+    [loss_per_record, dx, da0, dWax, dWaa, dba, aa, parameters] = optimize(Xtrain, Ytrain, a_prev, parameters_Wax,parameters_Waa, parameters_Wya, parameters_ba, parameters_by, learning_rate);
     %Gradients are:
     %dx, da0, dWax, dWaa, dba, aa
     

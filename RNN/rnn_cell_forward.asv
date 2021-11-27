@@ -30,16 +30,7 @@ function [a_next, yt_pred, cache] = rnn_cell_forward(xt, a_prev, parameters_Wax,
     %compute output of the current cell using the formula given above
     %yt_pred = softmax( Wya * a_next + by);
     yt_pred = Wya * a_next + by;
-    
-    %{ 
-    Debugging
-   
-    disp("In rnn_cell_fwd, size of yt_pred: ");
-    disp(size(by));
-    disp(size(yt_pred));
-    disp(size(Wya));
-    disp(size(a_next));
-    %}
+    disp("In rnn_cell_fwd, size of ");
     
     %store values you need for backward propagation in cache
     cache = {a_next, a_prev, xt, parameters_Wax,parameters_Waa, parameters_Wya, parameters_ba, parameters_by};

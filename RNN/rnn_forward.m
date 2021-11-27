@@ -36,13 +36,13 @@ function [a, y_pred, caches] = rnn_forward(x, a0, parameters_Wax,parameters_Waa,
     a_next = a0;
     
     % loop over all time-steps
-    for t=1:1:T_x
+    for t=1:1:(T_x)
         % Update next hidden state, compute the prediction, get the cache
         [a_next, yt_pred, cache] = rnn_cell_forward(x(:,t), a_next, parameters_Wax,parameters_Waa, parameters_Wya, parameters_ba, parameters_by);
-        % Save the value of the new "next" hidden state in a (≈1 line)
+        % Save the value of the new "next" hidden state in a
         a(:,t) = a_next;
         % Save the value of the prediction in y
-        y_pred(:,t) = yt_pred;
+        y_pred(:,t) = yt_pred(1);
         % Append "cache" to "caches"
         caches{end+1} = cache;
      end

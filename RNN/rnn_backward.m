@@ -1,4 +1,4 @@
-function [dx, da0, dWax, dWaa, dba, a] = rnn_backward(da, caches)
+function [dx, da0, dWax, dWaa, dba, a, dWay] = rnn_backward(dy,da, caches)
     %{
     Implement the backward pass for a RNN over an entire sequence of input data.
 
@@ -30,25 +30,27 @@ function [dx, da0, dWax, dWaa, dba, a] = rnn_backward(da, caches)
     %[n_a, m, T_x] = size(da);
     [n_a, T_x] = size(da);
     [n_x] = size(x1);
-    
+    [n_y, T_y] = size(dy);
     % Initialize the gradients with the right sizes
     dx = zeros([n_x, T_x]);
     dWax = zeros([n_a, n_x]);
     dWaa = zeros([n_a, n_a]);
     dba = zeros([n_a, 1]);
-    da0 = zeros([n_a]);
-    da_prevt = zeros([n_a]);
-        
+    da0 = zeros([n_a,1]);
+    da_prevt = zeros([n_a,1]);
+    dWay = zeros([n_a, n_y]);
+  
     % Loop through all the time steps
     for t = T_x:-1:1
         % Compute gradients at time step t. Choose wisely the "da_next" and the "cache" to use in the backward propagation step.
-       [dxt, da_prevt, dWaxt, dWaat, dbat] = rnn_cell_backward(da(:,t) + da_prevt, caches{t});
+       [dxt, da_prevt, dWaxt, dWaat, dbat, dWayt] = rnn_cell_backward(dy(:,t), da(:,t) + da_prevt, caches{t});
        
         % Increment global derivatives w.r.t parameters by adding their derivative at time-step t 
         dx(:, t) = dxt;
         dWax = dWax + dWaxt;
         dWaa = dWaa + dWaat;
         dba = dba + dbat;
+        dWay = dWay + dWayt;
         
     % Set da0 to the gradient of a which has been backpropagated through all time-steps 
     da0 = da_prevt;

@@ -1,4 +1,4 @@
-function [loss, dx, da0, dWax, dWaa, dba, aa, parameters] = optimize(X, Y, a_prev, parameters_Wax,parameters_Waa, parameters_Wya, parameters_ba, parameters_by, learning_rate)
+function [loss, dx, da0, dWax, dWaa, dba, parameters] = optimize(X, Y, a_prev, parameters_Wax,parameters_Waa, parameters_Wya, parameters_ba, parameters_by, learning_rate)
 
 % learning_rate = 0.01
 %{
@@ -30,11 +30,16 @@ function [loss, dx, da0, dWax, dWaa, dba, aa, parameters] = optimize(X, Y, a_pre
     % Forward propagate through time
     [a, y_pred, caches] = rnn_forward(X, a_prev,  parameters_Wax,parameters_Waa, parameters_Wya, parameters_ba, parameters_by);
     
-    %Find loss
-    loss = sum(abs(Y-y_pred).^2);
     
+    
+    %Find loss
+    loss = (1/2)*sum(abs(Y-y_pred).^2);
+    dy = (Y-y_pred);
+    W_ay = parameters_Wya';
+    da = W_ay * dy;
+    dby = dy;
     % Backpropagate through time 
-    [dx, da0, dWax, dWaa, dba, a] = rnn_backward(a, caches);
+    [dx, da0, dWax, dWaa, dba, a, dWay] = rnn_backward(dy, da, caches);
     
     % Clip your gradients between -5 (min) and 5 (max)
     %gradients = clip(gradients, 5)
@@ -42,11 +47,11 @@ function [loss, dx, da0, dWax, dWaa, dba, aa, parameters] = optimize(X, Y, a_pre
     %Update parameters
     parameters_Wax = parameters_Wax -learning_rate * dWax;
     parameters_Waa = parameters_Waa -learning_rate * dWaa;
-    parameters_Wya = parameters_Wya -learning_rate * dWya;
-    parameters_ba  = parameters_ba -learning_rate * db;
+    parameters_Wya = parameters_Wya -learning_rate * (dWay)';
+    parameters_ba  = parameters_ba -learning_rate * dba;
     parameters_by = parameters_by -learning_rate * dby;
     
     parameters = {parameters_Wax,parameters_Waa,parameters_Wya,parameters_ba,parameters_by};
-    aa = a(length(X)-1);
+    %aa = a(length(X)-1);
 
 end
