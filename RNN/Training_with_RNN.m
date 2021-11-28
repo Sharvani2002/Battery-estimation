@@ -17,9 +17,21 @@ Ytrain_un = xlsread('data_set.xlsx',1,'E2:E21')';%reading output data from train
 Xtrain = zeros(3,5,4);
 Ytrain = zeros(1,5,4);
 
+%{
 for i=1:1:5
     Xtemp = Xtrain_un(:,(4*(i-1)+1):(4*i));
     Ytemp = Ytrain_un(:,(4*(i-1)+1):(4*i));
+    Xtrain(:,i,:) = Xtemp;
+    Ytrain(:,i,:) = Ytemp;
+
+end
+%}
+
+Tx = 4;
+%Tx time steps (so Xtrain_un and Ytrain_un  should have no. of rows multiple of Tx )
+for i=1:1:5
+    Xtemp = Xtrain_un(:,(Tx*(i-1)+1):(Tx*i));
+    Ytemp = Ytrain_un(:,(Tx*(i-1)+1):(Tx*i));
     Xtrain(:,i,:) = Xtemp;
     Ytrain(:,i,:) = Ytemp;
 
