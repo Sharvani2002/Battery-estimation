@@ -22,8 +22,7 @@ Ytrain = xlsread('trainx.xlsx',1,'D1:D17000')';%reading output data from train e
 Xtrain_un = rand([4,5,4]);
 Ytrain_un = rand([1,5,4]);
 
-Xtrain = rand([4,2,4]);
-Ytrain = rand([1,2,4]);
+
 
 %Normalize 
 %{
@@ -51,6 +50,8 @@ It ensures that chopping the data into windows of consecutive samples is still p
 It ensures that the validation/test results are more realistic, being evaluated on the data collected after the model was trained.
 %}
 
+Xtrain = rand([4,2,4]);
+Ytrain = rand([1,2,4]);
 
 %{
 For adam optimizer, currently not used
@@ -66,7 +67,7 @@ t = 2;
 % (1 * 1 dimension)
 b = 0;
 num_iterations = 200;
-learning_rate = 0.001;
+learning_rate = 0.0000001;
 
 [n_x,m,T_x] = size(Xtrain);
 [n_y,m,T_y] = size(Ytrain);
@@ -93,6 +94,8 @@ for j = 1:1:num_iterations
     parameters_Wya = parameters{3};
     parameters_ba = parameters{4};
     parameters_by = parameters{5};
+    
+    
     
     %loss = loss + loss_per_record;
      if mod(j,30) == 0

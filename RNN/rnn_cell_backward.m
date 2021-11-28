@@ -16,8 +16,8 @@ function [dxt, da_prev, dWax, dWaa, dba, dWay] = rnn_cell_backward(dy_next, da_n
     
      % Retrieve values from cache
     %a_next, a_prev, xt, Wax, Waa, Wya, ba, by = cache;
-    a_next = cache{1};
-    a_prev = cache{2};
+    a_next = cache{1}; %a<t>
+    a_prev = cache{2}; %a<t-1>
     xt = cache{3};
     Wax = cache{4};
     Waa = cache{5};
