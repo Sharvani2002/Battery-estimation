@@ -6,42 +6,52 @@ Our model will have the following structure:
     Run the optimization loop
     Forward propagation to compute the loss function
     Backward propagation to compute the gradients with respect to the loss function
-    [Not done]Clip the gradients to avoid exploding gradients
+    Clip the gradients to avoid exploding gradients
     Using the gradients, update our parameter with the gradient descent update rule.
 [doesnot return now]Return the learned parameters
 %}
 
-%Edit this to padd X and Y train data
+%Edit this to add X and Y train data
+Xtrain_un = xlsread('data_set.xlsx',1,'B2:D21')';%reading input data from train excel sheet
+Ytrain_un = xlsread('data_set.xlsx',1,'E2:E21')';%reading output data from train excel sheet
+Xtrain = zeros(3,5,4);
+Ytrain = zeros(1,5,4);
 
-%{
-Xtrain = xlsread('trainx.xlsx',1,'A1:C17000')';%reading input data from train excel sheet
-Ytrain = xlsread('trainx.xlsx',1,'D1:D17000')';%reading output data from train excel sheet
-%}
+for i=1:1:5
+    Xtemp = Xtrain(:,(4*(i-1)+1):(4*i));
+    Ytemp = Ytrain(:,(4*(i-1)+1):(4*i));
+    Xtrain(:,i,:) = Xtemp;
+    Ytrain(:,i,:) = Ytemp;
 
+end
 %Partition the training and test data. Train on the first 90% of the sequence and test on the last 10%.
+%{
 Xtrain_un = rand([4,5,4]);
 Ytrain_un = rand([1,5,4]);
 
+Xtrain = rand([4,2,4]);
+Ytrain = rand([1,2,4]);
+%}
 
 
 %Normalize 
 %{
 min_value_X = min(Xtrain_un,2);
 max_value_X = max(Xtrain_un,2);
-Xtrain = (Xtrain_un - min_value_X)/(max_value_X - min_value_X);
+Xtrain = (Xtrain - min_value_X)/(max_value_X - min_value_X);
 
 min_value_Y = min(Ytrain_un,2);
 max_value_Y = max(Ytrain_un,2);
-Ytrain = (Ytrain_un - min_value_Y)/(max_value_Y - min_value_Y);
+Ytrain = (Ytrain - min_value_Y)/(max_value_Y - min_value_Y);
 %}
 %Standardize data
 %{
 mu_X = mean(Xtrain_un,2);
 sig_X = std(Xtrain_un,2);
-Xtrain = (Xtrain_un - mu_X) / sig_X;
+Xtrain = (Xtrain - mu_X) / sig_X;
 mu_Y = mean(Ytrain_un,2);
 sig_Y = std(Ytrain_un,2);
-Ytrain = (Ytrain_un - mu_Y) / sig_Y;
+Ytrain = (Ytrain - mu_Y) / sig_Y;
 %}
 %{
 Note the data is not being randomly shuffled before splitting. This is for two reasons:
@@ -50,8 +60,7 @@ It ensures that chopping the data into windows of consecutive samples is still p
 It ensures that the validation/test results are more realistic, being evaluated on the data collected after the model was trained.
 %}
 
-Xtrain = rand([4,2,4]);
-Ytrain = rand([1,2,4]);
+
 
 %{
 For adam optimizer, currently not used
@@ -63,8 +72,6 @@ num_iterations = 50;
 t = 2;
 %}
 
-%very simple a
-% (1 * 1 dimension)
 b = 0;
 num_iterations = 200;
 learning_rate = 0.0000001;
@@ -84,7 +91,7 @@ loss = 0;
 
 for j = 1:1:num_iterations
 
-    [loss_per_record, dx, da0, dWax, dWaa, dba, parameters] = optimize(Xtrain, Ytrain, a_prev, parameters_Wax,parameters_Waa, parameters_Wya, parameters_ba, parameters_by, learning_rate);
+    [loss_per_iter, dx, da0, dWax, dWaa, dba, parameters] = optimize(Xtrain, Ytrain, a_prev, parameters_Wax,parameters_Waa, parameters_Wya, parameters_ba, parameters_by, learning_rate);
     %Gradients are:
     %dx, da0, dWax, dWaa, dba, aa
     
@@ -95,11 +102,9 @@ for j = 1:1:num_iterations
     parameters_ba = parameters{4};
     parameters_by = parameters{5};
     
-    
-    
     %loss = loss + loss_per_record;
      if mod(j,30) == 0
-        fprintf('Iteration: %d, Loss: %f\n',j, loss_per_record);
+        fprintf('Iteration: %d, Loss: %f\n',j, loss_per_iter);
      end
     
 end
