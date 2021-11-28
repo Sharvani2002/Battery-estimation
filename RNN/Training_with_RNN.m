@@ -18,8 +18,8 @@ Xtrain = zeros(3,5,4);
 Ytrain = zeros(1,5,4);
 
 for i=1:1:5
-    Xtemp = Xtrain(:,(4*(i-1)+1):(4*i));
-    Ytemp = Ytrain(:,(4*(i-1)+1):(4*i));
+    Xtemp = Xtrain_un(:,(4*(i-1)+1):(4*i));
+    Ytemp = Ytrain_un(:,(4*(i-1)+1):(4*i));
     Xtrain(:,i,:) = Xtemp;
     Ytrain(:,i,:) = Ytemp;
 
@@ -74,7 +74,7 @@ t = 2;
 
 b = 0;
 num_iterations = 200;
-learning_rate = 0.0000001;
+learning_rate = 0.0001;
 
 [n_x,m,T_x] = size(Xtrain);
 [n_y,m,T_y] = size(Ytrain);

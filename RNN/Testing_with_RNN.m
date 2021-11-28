@@ -13,9 +13,10 @@ end
 Tx = 4; %=Ty
 a0 = da0;
 a0 = zeros([1, 1, Tx]);
+a0(1,1,1) = 0.5;
 % obtain parameters from trained data
 
-[a, y_pred, caches] = rnn_forward(Xtrain, a0, parameters_Wax,parameters_Waa, parameters_Wya, parameters_ba, parameters_by);
+[a, y_pred, caches] = rnn_forward(Xtrain, a0(1,1,1), parameters_Wax,parameters_Waa, parameters_Wya, parameters_ba, parameters_by);
 loss = (1/2)*sum(abs(Ytrain-y_pred).^2,2);
 fprintf('\nLoss in Test data: %f\n',loss);
 
