@@ -1,4 +1,4 @@
-function [dxt, da_prev, dWax, dWaa, dba, dWay] = rnn_cell_backward(dy, da_next, cache)
+function [dxt, da_prev, dWax, dWaa, dba, dWay] = rnn_cell_backward(dy_next, da_next, cache)
     %{
     Implements the backward pass for the RNN-cell (single time-step).
     Arguments:
@@ -24,13 +24,9 @@ function [dxt, da_prev, dWax, dWaa, dba, dWay] = rnn_cell_backward(dy, da_next, 
     Wya = cache{6};
     ba = cache{7};
     by = cache{8};
-    
-    
-    %dWya = dWya + y * a';
-    
-    
+   
     % compute the gradient of tanh with respect to a_next
-    dtanh = (1 - a_next^2) * da_next;
+    dtanh = (1 - a_next.^2) .* da_next;
 
     % compute the gradient of the loss with respect to Wax 
     dxt = Wax' * dtanh; %dot product
@@ -41,8 +37,8 @@ function [dxt, da_prev, dWax, dWaa, dba, dWay] = rnn_cell_backward(dy, da_next, 
     dWaa =  dtanh * a_prev'; %dot product
 
     % compute the gradient with respect to b 
-    dba = sum(dtanh, 1);
+    dba = sum(dtanh, 2);
     
-    dWay = dy * a_next;
+    dWay =  a_next * dy_next';
     
 end

@@ -42,6 +42,7 @@ function [a_next, yt_pred, cache] = rnn_cell_forward(xt, a_prev, parameters_Wax,
     %}
     
     %store values you need for backward propagation in cache
+    %a_next or a<t>, a_prev or a<t-1>
     cache = {a_next, a_prev, xt, parameters_Wax,parameters_Waa, parameters_Wya, parameters_ba, parameters_by};
     
 end

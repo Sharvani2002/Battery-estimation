@@ -1,6 +1,6 @@
 function [a, y_pred, caches] = rnn_forward(x, a0, parameters_Wax,parameters_Waa, parameters_Wya, parameters_ba, parameters_by)
     %{
-    Implement the forward propagation of the recurrent neural network described in Figure (3).
+    Implementing the forward propagation of the recurrent neural network.
 
     Arguments:
     x -- Input data for every time-step, of shape (n_x, m, T_x).
@@ -23,14 +23,14 @@ function [a, y_pred, caches] = rnn_forward(x, a0, parameters_Wax,parameters_Waa,
     
     % Retrieve dimensions from shapes of x and parameters["Wya"]
     %[n_x, m, T_x] = size(x);
-    [n_x, T_x] = size(x);
+    [n_x, m, T_x] = size(x);
     [n_y, n_a] = size(parameters_Wya);
     
     % initialize "a" and "y_pred" with zeros
     %a = zeros([n_a, m, T_x]);
-    a = zeros([n_a, T_x]);
+    a = zeros([n_a, m, T_x]);
     %y_pred = zeros([n_y, m, T_x]);
-    y_pred = zeros([n_y, T_x]);
+    y_pred = zeros([n_y, m, T_x]);
     
     % Initialize a_next
     a_next = a0;
@@ -38,11 +38,11 @@ function [a, y_pred, caches] = rnn_forward(x, a0, parameters_Wax,parameters_Waa,
     % loop over all time-steps
     for t=1:1:(T_x)
         % Update next hidden state, compute the prediction, get the cache
-        [a_next, yt_pred, cache] = rnn_cell_forward(x(:,t), a_next, parameters_Wax,parameters_Waa, parameters_Wya, parameters_ba, parameters_by);
+        [a_next, yt_pred, cache] = rnn_cell_forward(x(:,:,t), a_next, parameters_Wax,parameters_Waa, parameters_Wya, parameters_ba, parameters_by);
         % Save the value of the new "next" hidden state in a
-        a(:,t) = a_next;
+        a(:,:, t) = a_next;
         % Save the value of the prediction in y
-        y_pred(:,t) = yt_pred(1);
+        y_pred(:,:,t) = yt_pred;
         % Append "cache" to "caches"
         caches{end+1} = cache;
      end
